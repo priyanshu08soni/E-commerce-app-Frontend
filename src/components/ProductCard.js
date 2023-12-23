@@ -12,7 +12,16 @@ const ProductCard = (props) => {
           location.pathname === "/product" ? `gr-${grid}` : "col-3 mt-1"
         }`}
       >
-        <Link to="/product/:id" className="product-card position-relative">
+        <Link
+          to={`${
+            location.pathname == "/"
+              ? "/product/:id"
+              : location.pathname == "/product/:id"
+              ? "/product/:id"
+              : ":id"
+          }`}
+          className="product-card position-relative"
+        >
           <div className="wishlist-icon position-absolute">
             <button className="border-0 bg-transparent">
               <img src="/images/wish.svg" alt="wishlist" />
@@ -44,7 +53,7 @@ const ProductCard = (props) => {
               value="3"
               activeColor="#ffd700"
             ></ReactStars>
-            <p className={`description ${grid===12?"d-block":"d-none"}`} >
+            <p className={`description ${grid === 12 ? "d-block" : "d-none"}`}>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut
               voluptas voluptates veniam natus quam, et vero reprehenderit sunt?
               Facilis impedit libero quod architecto totam.
