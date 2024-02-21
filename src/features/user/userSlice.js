@@ -16,6 +16,13 @@ export const loginUser=createAsyncThunk("auth/login",async(userData,thunkAPI)=>{
         return thunkAPI.rejectWithValue(error);
     }
 })
+export const getUserWishlist=createAsyncThunk("user/wishlist",async(thunkAPI)=>{
+    try {
+        return await authService.getUserWishlist();        
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+    }
+})
 
 const getCustomerFromLocalStorage =localStorage.getItem("customer")?JSON.parse(localStorage.getItem("customer")):null;
 const initialState={
@@ -73,6 +80,21 @@ export const authSlice=createSlice({
             if(state.isError===true){
                 toast.error(action.error);
             }
+        })
+        .addCase(getUserWishlist.pending,(state)=>{
+            state.isLoading=true
+        })
+        .addCase(getUserWishlist.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;  
+            state.wishlist=action.payload;
+        })
+        .addCase(getUserWishlist.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isError=true;
+            state.isSuccess=false;
+            state.message=action.error;
         })
     }
 })

@@ -9,13 +9,7 @@ export const getProducts=createAsyncThunk("product/get",async(thunkAPI)=>{
         return thunkAPI.rejectWithValue(error);
     }
 })
-export const addToWish=createAsyncThunk("product/add-to-wishlist",async(prodId,thunkAPI)=>{
-    try {
-        return await productService.addToWishlist(prodId);        
-    } catch (error) {
-        return thunkAPI.rejectWithValue(error);
-    }
-})
+
 
 
 const initialState={
@@ -51,21 +45,6 @@ export const productSlice=createSlice({
             if(state.isError===true){
                 toast.error(action.error);
             }
-        })
-        .addCase(addToWish.pending,(state)=>{
-            state.isLoading=true
-        })
-        .addCase(addToWish.fulfilled,(state,action)=>{
-            state.isSuccess=true;  
-            state.isLoading=false;
-            state.isError=false;
-            state.addToWishlist=action.payload;
-        })
-        .addCase(addToWish.rejected,(state,action)=>{
-            state.isLoading=false;
-            state.isError=true;
-            state.isSuccess=false;
-            state.message=action.error;
         })
     }
 })

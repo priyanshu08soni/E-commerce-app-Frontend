@@ -1,8 +1,8 @@
 import React from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch, useSelector} from "react-redux";
-import { addToWish } from "../features/products/productSlice";
+import { useDispatch} from "react-redux";
+import { addToWish } from "../features/wishlist/wishlistSlice";
 
 const ProductCard = (props) => {
   const { grid, data } = props;
