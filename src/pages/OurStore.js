@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/breadCrumb";
 import Meta from "../components/Meta";
 import ReactStars from "react-rating-stars-component";
 import ProductCard from "../components/ProductCard";
 import Container from "../components/Container";
-
+import {useDispatch, useSelector} from "react-redux"
 import Colors from "../components/Color";
+import { getProducts } from "../features/products/productSlice";
 const OurStore = () => {
   const [grid, setGrid] = useState(4);
-
+  const [products,setProducts]=useState();
+  const dispatch=useDispatch();
+  useEffect(()=>{
+    dispatch(getProducts());
+  },[])
+  const productState=useSelector((state)=>state.product.product);
   return (
     <>
       <Meta title="Our Store" />
@@ -223,7 +229,7 @@ const OurStore = () => {
                       count={5}
                       edit={false}
                       size={24}
-                      value="3"
+                      value={3}
                       activeColor="#ffd700"
                     ></ReactStars>
                     <b>$ 300</b>
@@ -245,7 +251,7 @@ const OurStore = () => {
                       count={5}
                       edit={false}
                       size={24}
-                      value="3"
+                      value={3}
                       activeColor="#ffd700"
                     ></ReactStars>
                     <b>$ 300</b>
@@ -320,13 +326,8 @@ const OurStore = () => {
             </div>
             <div className="products-list pt-3">
               <div className="d-flex gap-10 flex-wrap">
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
+                <ProductCard data={productState} grid={grid} />
+
               </div>
             </div>
           </div>
