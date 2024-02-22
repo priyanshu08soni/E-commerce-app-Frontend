@@ -233,6 +233,15 @@ footer .input-group-text{
 .blog-card{
   background-color: white;
   border-radius: 10px;
+  width: 25% !important;
+}
+.blog-side-design{
+  display: flex;
+}
+.blogcarddesign{
+  display: flex;
+  gap: 20px;
+  width: 100%;
 }
 .blog-card img{
   border-top-left-radius: 10px;

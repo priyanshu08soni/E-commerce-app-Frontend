@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BreadCrumb from "../components/breadCrumb";
 import Meta from "../components/Meta";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Container from "../components/Container";
+import { useDispatch, useSelector } from "react-redux";
+import { getABlog } from "../features/blogs/blogSlice";
 
 const SingleBlog = () => {
+  const dispatch=useDispatch();
+  const location = useLocation();
+  const blogId=location.pathname.split("/")[2];
+  const blogState=useSelector(state=>state.blog.singleBlog);
+ 
+  useEffect(()=>{
+    dispatch(getABlog(blogId));
+  },[])
+
   return (
     <>
       <Meta title="Dynamic Blog Name" />
@@ -21,22 +32,20 @@ const SingleBlog = () => {
                 <FaArrowLeftLong className="fs-4" />
                 Go back to Blogs
               </Link>
-              <h3 className="title">A Beautiful Sunday Morning Renaissance</h3>
-              <img
-                src="/images/blog-1.jpg"
-                className="img-fluid w-100 my-4"
-                alt=""
-              />
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptates doloremque error, veritatis temporibus ea blanditiis,
-                nesciunt voluptate mollitia sunt perferendis officia in
-                reiciendis quo itaque praesentium voluptas aut quam! Maiores eum
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint
-                debitis hic, non, illo delectus consectetur voluptatem veniam
-                fuga distinctio blanditiis, doloremque aperiam sed. tempora
-                expedita quod.
-              </p>
+              <h3 className="title">{blogState.title}</h3>
+              <div className="blog-side-design gap-5">
+                <img
+                  src={blogState.images[0].url}
+                  className="img-fluid w-33 my-4 rounded-2"
+                  alt="blog-img"
+                />
+                <div className="my-4">
+                  <h5>Description</h5>
+                  <p>
+                    {blogState.description}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

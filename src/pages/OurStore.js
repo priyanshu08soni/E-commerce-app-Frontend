@@ -9,7 +9,6 @@ import Colors from "../components/Color";
 import { getProducts } from "../features/products/productSlice";
 const OurStore = () => {
   const [grid, setGrid] = useState(4);
-  const [products,setProducts]=useState();
   const dispatch=useDispatch();
   useEffect(()=>{
     dispatch(getProducts());

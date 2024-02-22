@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BreadCrumb from "../components/breadCrumb";
 import Meta from "../components/Meta";
 import BlogCard from "../components/BlogCard";
@@ -25,16 +25,7 @@ const Blog = () => {
           </div>
           <div className="col-9">
             <div className="row">
-              <div className="col-6 mb-3">
-                <BlogCard />
-              </div>
-              <div className="col-6 mb-3">
-                <BlogCard />
-              </div>
-              <div className="col-6 mb-3">
-                <BlogCard />
-              </div>
-              <div className="col-6 mb-3">
+              <div className="blogcarddesign col-6 mb-3">
                 <BlogCard />
               </div>
             </div>

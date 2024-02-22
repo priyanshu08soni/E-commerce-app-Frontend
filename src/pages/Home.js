@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import BlogCard from "../components/BlogCard";
@@ -7,7 +7,14 @@ import SpecialProduct from "../components/SpecialProduct";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import { services } from "../utils/Data";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts } from "../features/products/productSlice";
 const Home = () => {
+  const dispatch=useDispatch();
+  useEffect(()=>{
+    dispatch(getProducts());
+  },[])
+  const productState=useSelector((state)=>state.product.product);
   return (
     <>
       <Meta title="E-Commerse" />
@@ -179,10 +186,7 @@ const Home = () => {
           <div className="col-12">
             <h3 className="section-heading">Featured Collection</h3>
           </div>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <ProductCard  data={productState} />
         </div>
       </Container>
       <Container class1="home-wrapper-2 famous-wrapper py-5">
@@ -272,10 +276,7 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <ProductCard  data={productState} />
         </div>
       </Container>
       <Container class1="marque-wrapper home-wrapper-2 py-5">
@@ -319,16 +320,7 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-3">
-            <BlogCard />
-          </div>
-          <div className="col-3">
-            <BlogCard />
-          </div>
-          <div className="col-3">
-            <BlogCard />
-          </div>
-          <div className="col-3">
+          <div className="blogcarddesign col-3">
             <BlogCard />
           </div>
         </div>
