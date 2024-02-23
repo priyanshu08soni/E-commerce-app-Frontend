@@ -186,7 +186,7 @@ const Home = () => {
           <div className="col-12">
             <h3 className="section-heading">Featured Collection</h3>
           </div>
-          <ProductCard  data={productState} />
+          <ProductCard  data={productState} category="featured" />
         </div>
       </Container>
       <Container class1="home-wrapper-2 famous-wrapper py-5">
@@ -261,12 +261,24 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <SpecialProduct />
-          <SpecialProduct />
-          <SpecialProduct />
-          <SpecialProduct />
-          <SpecialProduct />
-          <SpecialProduct />
+          {
+            productState && productState?.map((item,index)=>{
+              if(item.tags==="special"){
+                return(
+                  <SpecialProduct 
+                    key={index} 
+                    title={item?.title} 
+                    brand={item?.brand}
+                    totalrating={item?.totalrating.toString()}
+                    price={item?.price}
+                    sold={item?.sold}
+                    quantity={item?.quantity}
+                  />
+                )
+              }
+            })
+          }
+          
         </div>
       </Container>
       <Container class1="popular-wrapper py-5 home-wrapper-2">
@@ -276,7 +288,7 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <ProductCard  data={productState} />
+          <ProductCard  data={productState} category="popular" />
         </div>
       </Container>
       <Container class1="marque-wrapper home-wrapper-2 py-5">

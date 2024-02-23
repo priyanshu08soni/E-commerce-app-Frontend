@@ -36,7 +36,9 @@ const BlogCard = () => {
                 <p className="desc">
                   {blog.description.substr(0,70)+"..."}
                 </p>
-                <Link to={`/blog/${blog._id}`} className="button">
+                <Link
+                 to={`/blog/${blog._id}`} 
+                 className="button">
                   Read More
                 </Link>
               </div>
