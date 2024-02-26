@@ -18,6 +18,10 @@
   --color-201e4c: #201e4c;
 
 }
+.errors{
+  color: red !important;
+  font-size: 12px !important;
+}
 .section-heading{
   font-size: 26px;
   line-height: 32px;

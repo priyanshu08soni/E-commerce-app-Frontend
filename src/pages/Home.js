@@ -267,6 +267,7 @@ const Home = () => {
                 return(
                   <SpecialProduct 
                     key={index} 
+                    id={item?._id}
                     title={item?.title} 
                     brand={item?.brand}
                     totalrating={item?.totalrating.toString()}

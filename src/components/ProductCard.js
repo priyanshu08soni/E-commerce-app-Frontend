@@ -1,6 +1,6 @@
 import React from "react";
 import ReactStars from "react-rating-stars-component";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToWish } from "../features/wishlist/wishlistSlice";
 
@@ -8,6 +8,7 @@ const ProductCard = (props) => {
   const { grid, data, category } = props;
   let location = useLocation();
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const addToWishlist = (prodId) => {
     dispatch(addToWish(prodId));
   };
@@ -26,15 +27,7 @@ const ProductCard = (props) => {
                       : "col-3 mt-1"
                   }`}
                 >
-                  <Link
-                    to={`${
-                      location.pathname === "/"
-                        ? "/product/:id"
-                        : location.pathname === "/product/:id"
-                        ? "/product/:id"
-                        : ":id"
-                    }`}
-                    className="product-card position-relative"
+                  <div className="product-card position-relative"
                   >
                     <div className="wishlist-icon position-absolute">
                       <button className="border-0 bg-transparent">
@@ -85,14 +78,14 @@ const ProductCard = (props) => {
                           <img src="/images/prodcompare.svg" alt="compare" />
                         </button>
                         <button className="border-0 bg-transparent">
-                          <img src="/images/view.svg" alt="view" />
+                          <img src="/images/view.svg" onClick={()=>navigate("/product/"+item?._id)} alt="view" />
                         </button>
                         <button className="border-0 bg-transparent">
                           <img src="/images/add-cart.svg" alt="addcart" />
                         </button>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               );
             }
@@ -104,16 +97,7 @@ const ProductCard = (props) => {
                   location.pathname === "/product" ? `gr-${grid}` : "col-3 mt-1"
                 }`}
               >
-                <Link
-                  to={`${
-                    location.pathname === "/"
-                      ? "/product/:id"
-                      : location.pathname === "/product/:id"
-                      ? "/product/:id"
-                      : ":id"
-                  }`}
-                  className="product-card position-relative"
-                >
+                <div className="product-card position-relative">
                   <div className="wishlist-icon position-absolute">
                     <button className="border-0 bg-transparent">
                       <img
@@ -130,11 +114,13 @@ const ProductCard = (props) => {
                       className="img-fluid w-100"
                       src={item?.images[0].url}
                       alt="product /images"
+                      onClick={()=>navigate("/product/"+item?._id)}
                     />
                     <img
                       className="img-fluid w-100"
                       src={item?.images[0].url}
                       alt="product /images"
+                      onClick={()=>navigate("/product/"+item?._id)}
                     />
                   </div>
                   <div className="product-details">
@@ -163,14 +149,14 @@ const ProductCard = (props) => {
                         <img src="/images/prodcompare.svg" alt="compare" />
                       </button>
                       <button className="border-0 bg-transparent">
-                        <img src="/images/view.svg" alt="view" />
+                        <img src="/images/view.svg" onClick={()=>navigate("/product/"+item?._id)} alt="view" />
                       </button>
                       <button className="border-0 bg-transparent">
                         <img src="/images/add-cart.svg" alt="addcart" />
                       </button>
                     </div>
                   </div>
-                </Link>
+                </div>
               </div>
             );
           }
