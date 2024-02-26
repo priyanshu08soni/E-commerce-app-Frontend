@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/breadCrumb";
 import Meta from "../components/Meta";
 import ProductCard from "../components/ProductCard";
@@ -7,16 +7,25 @@ import ReactImageZoom from "react-image-zoom";
 import Color from "../components/Color";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Container from "../components/Container";
+import { useDispatch, useSelector } from "react-redux";
+import { getAProduct } from "../features/products/productSlice";
 
 const SingleProduct = () => {
+  const location=useLocation();
+  const prodId=location.pathname.split("/")[2]
+  const dispatch=useDispatch();
   const [orderdProduct, setorderdProduct] = useState(true);
+  useEffect(()=>{
+    dispatch(getAProduct(prodId))
+  },[])
+  const productState=useSelector(state=>state.product.SingleProduct);
   const props = {
     width: 500,
     height: 500,
     zoomWidth: 500,
-    img: "/images/tab.jpg",
+    img: productState?.images[0]?.url ? productState?.images[0]?.url : "/images/tab.jpg",
   };
   const copyToClipboard = (text) => {
     console.log('text', text)
@@ -27,7 +36,6 @@ const SingleProduct = () => {
     document.execCommand('copy')
     textField.remove()
   }
-
   return (
     <>
       <Meta title="Product Name" />
@@ -41,33 +49,28 @@ const SingleProduct = () => {
                 </div>
               </div>
               <div className="d-flex flex-wrap gap-15 other-product-images">
-                <div>
-                  <img className="img-fluid" src="/images/tab.jpg" alt="" />
-                </div>
-                <div>
-                  <img className="img-fluid" src="/images/tab1.jpg" alt="" />
-                </div>
-                <div>
-                  <img className="img-fluid" src="/images/tab2.jpg" alt="" />
-                </div>
-                <div>
-                  <img className="img-fluid" src="/images/tab3.jpg" alt="" />
-                </div>
+                { productState && productState?.images.map((item,index)=>{
+                  return(
+                    <div>
+                      <img className="img-fluid" src={item?.url} alt="" />
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="col-6">
               <div className="main-product-details">
                 <div className="border-bottom">
-                  <h3 className="title">Kids Tablet Bulk 10 Pack Multi Colored For Students</h3>
+                  <h3 className="title">{productState?.title}</h3>
                 </div>
                 <div className="border-bottom py-3">
-                  <p className="price">$ 100</p>
+                  <p className="price">$ {productState?.price}</p>
                   <div className="d-flex align-items-center gap-10">
                     <ReactStars
                       count={5}
                       edit={false}
                       size={24}
-                      value="3"
+                      value={productState?.totalrating}
                       activeColor="#ffd700"
                     ></ReactStars>{" "}
                     <p className="mb-0 t-review">( 2 reviews )</p>
@@ -83,38 +86,29 @@ const SingleProduct = () => {
                   </div>
                   <div className="d-flex gap-10 align-items-center my-4">
                     <h3 className="product-heading">Brand:</h3>
-                    <p className="product-data">Apple</p>
+                    <p className="product-data">{productState?.brand}</p>
                   </div>
                   <div className="d-flex gap-10 align-items-center my-4">
                     <h3
                       className="product-heading"
-                      style={{ paddingBottom: "22px" }}
                     >
-                      Categories:
+                      Category:
                     </h3>
-                    <p className="product-data">
-                      airpods, camera's, Computers & Laptop, headphones, mini
-                      speaker, our store, Portable Speakers, smart phones, Smart
-                      Television, Smartwatches
+                    <p className="product-data d-flex">
+                      <p className="mb-0 px-2">
+                        {productState?.category}  
+                      </p>
                     </p>
                   </div>
                   <div className="d-flex gap-10 align-items-center my-4">
                     <h3 className="product-heading">Tags:</h3>
                     <p className="product-data d-flex">
-                      <p className="mb-0 px-2">headphones</p>
-                      <p className="mb-0 px-2">laptop</p>
-                      <p className="mb-0 px-2">mobile</p>
-                      <p className="mb-0 px-2">oppo</p>
-                      <p className="mb-0 px-2">speaker</p>
+                      <p className="mb-0 px-2">{productState?.tags}</p>
                     </p>
                   </div>
                   <div className="d-flex gap-10 align-items-center my-4">
-                    <h3 className="product-heading">SKU:</h3>
-                    <p className="product-data">SKU027</p>
-                  </div>
-                  <div className="d-flex gap-10 align-items-center my-4">
                     <h3 className="product-heading">Availability:</h3>
-                    <p className="product-data">541 In Stock</p>
+                    <p className="product-data">{productState?.quantity-productState?.sold} In Stock</p>
                   </div>
                   <div className="d-flex gap-10 flex-column my-4">
                     <h3 className="product-heading">Size:</h3>
@@ -184,7 +178,7 @@ const SingleProduct = () => {
                   </div>
                   <div className="d-flex gap-10 align-items-center my-4">
                     <h3 className="product-heading"  >Copy Product Link:</h3>
-                    <a href={"javascript:void(0)"} onClick={()=>{copyToClipboard("/images/tab.jpg")}}>
+                    <a className="text-danger" href={"javascript:void(0)"} onClick={()=>{copyToClipboard(window.location.href)}}>
                       Click Here
                     </a>
                   </div>
@@ -198,13 +192,9 @@ const SingleProduct = () => {
             <div className="col-12">
               <h4>Description</h4>
               <div className="bg-white p-3">
-                <p>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Aliquid quod sint nulla ipsum rem corrupti repellat a. Ab
-                  repellat fugit numquam, deleniti officiis, adipisci quia
-                  laboriosam soluta ad suscipit commodi architecto. Nulla, quo
-                  dolores.
-                </p>
+                <p dangerouslySetInnerHTML={{
+                  __html:productState?.description,
+                }} ></p>
               </div>
             </div>
           </div>
