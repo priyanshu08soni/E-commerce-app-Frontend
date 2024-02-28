@@ -5,17 +5,27 @@ import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserCart } from "../features/user/userSlice";
-import Color from "../components/Color";
+import { deleteCartProduct, getUserCart, updateProductQuantityFromCart } from "../features/user/userSlice";
+
 const Cart = () => {
-  const [color,setColor]=useState();
+  const [productUpdateDetail,setProductUpdateDetail]=useState(null);
+  const userCartState = useSelector((state) => state.auth.cartProducts);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserCart());
   },[]);
-
-  const userCartState = useSelector((state) => state.auth.cartProducts);
-
+  useEffect(()=>{
+    dispatch(updateProductQuantityFromCart({cartItemId:productUpdateDetail?.cartItemId,quantity:productUpdateDetail?.quantity}));
+    setTimeout(() => {
+      dispatch(getUserCart());
+    }, 200);
+  },[productUpdateDetail]);
+  const deleteProduct=(id)=>{
+    dispatch(deleteCartProduct(id));
+    setTimeout(() => {
+      dispatch(getUserCart());
+    }, 200);
+  }
   return (
     <>
       <Meta title="Cart" />
@@ -62,11 +72,14 @@ const Cart = () => {
                           min={1}
                           max={10}
                           className="form-control"
-                          value={item?.quantity}
+                          value={productUpdateDetail?.quantity ? productUpdateDetail?.quantity : item?.quantity}
+                          onChange={(e)=>{
+                            setProductUpdateDetail({cartItemId:item?._id,quantity:e.target.value});
+                          }}
                         />
                       </div>
                       <div className="delete">
-                        <AiFillDelete />
+                        <AiFillDelete onClick={()=>{deleteProduct(item?._id)}} />
                       </div>
                     </div>
                     <div className="cart-col-4">
