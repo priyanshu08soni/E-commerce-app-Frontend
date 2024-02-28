@@ -3,8 +3,8 @@ import BreadCrumb from "../components/breadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserWishlist } from "../features/user/userSlice";
-import { addToWish } from "../features/wishlist/wishlistSlice";
+import { addToWish, getUserWishlist } from "../features/user/userSlice";
+
 
 const WishList = () => {
   const dispatch = useDispatch();
@@ -18,9 +18,9 @@ const WishList = () => {
     dispatch(addToWish(id));
     setTimeout(() => {
       dispatch(getUserWishlist());
-    }, 300);
+    }, 100);
   }
-  const wlState= useSelector((state) => state.auth.wishlist.wishlist);
+  const wlState= useSelector((state) => state?.auth?.wishlist?.wishlist);
  
   return (
     <>

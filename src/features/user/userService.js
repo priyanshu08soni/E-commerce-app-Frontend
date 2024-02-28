@@ -44,7 +44,10 @@ const updateProductQuantityFromCart=async(cartDetails)=>{
         return response.data;
     }
 }
-
+const addToWishlist =async(prodId)=>{
+    const response=await axios.put(`${base_url}product/wishlist`,{prodId},config);
+    return response.data;
+}
 const authService={
     register,
     login,
@@ -53,6 +56,7 @@ const authService={
     getUserCart,
     removeProductFromCart,
     updateProductQuantityFromCart,
+    addToWishlist
 }
 
 export default authService;
