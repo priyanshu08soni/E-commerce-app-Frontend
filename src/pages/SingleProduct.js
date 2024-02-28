@@ -11,8 +11,12 @@ import { Link, useLocation } from "react-router-dom";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { getAProduct } from "../features/products/productSlice";
+import { addToCart } from "../features/user/userSlice";
+import { toast } from "react-toastify";
 
 const SingleProduct = () => {
+  const [color,setColor]=useState(null);
+  const [quantity,setQuantity]=useState(1);
   const location=useLocation();
   const prodId=location.pathname.split("/")[2]
   const dispatch=useDispatch();
@@ -21,6 +25,14 @@ const SingleProduct = () => {
     dispatch(getAProduct(prodId))
   },[])
   const productState=useSelector(state=>state.product.SingleProduct);
+  const uploadToCart=()=>{
+    if(color===null){
+      toast.error("Please Choose Color");
+      return false
+    }else{
+      dispatch(addToCart({productId:productState?._id,quantity,color,price:productState?.price}))
+    }
+  }
   const props = {
     width: 500,
     height: 500,
@@ -133,9 +145,7 @@ const SingleProduct = () => {
                   <div className="d-flex gap-10 flex-column my-4">
                     <h3 className="product-heading">Color:</h3>
                     <div className="d-flex flex-wrap gap-10">
-                      <Color />
-                      <Color />
-                      <Color />
+                      <Color setColor={setColor} colorData={productState?.color}  />
                     </div>
                   </div>
                   <div className="d-flex gap-10 flex-column my-4">
@@ -147,8 +157,15 @@ const SingleProduct = () => {
                         min={1}
                         max={10}
                         style={{ width: "60px" }}
+                        onChange={(e)=>{setQuantity(e.target.value)}}
+                        value={quantity}
                       />
-                      <button className="button border-0">ADD TO CART</button>
+                      <button 
+                        className="button border-0" 
+                        onClick={()=>{uploadToCart()}}
+                      >
+                        ADD TO CART
+                      </button>
                       <Link to="/signup" className="button signup">
                         BUY NOW
                       </Link>
