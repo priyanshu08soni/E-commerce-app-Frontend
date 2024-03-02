@@ -9,9 +9,11 @@ import Container from "../components/Container";
 import { services } from "../utils/Data";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../features/products/productSlice";
+import { getUserCart } from "../features/user/userSlice";
 const Home = () => {
   const dispatch=useDispatch();
   useEffect(()=>{
+    dispatch(getUserCart());
     dispatch(getProducts());
   },[])
   const productState=useSelector((state)=>state.product.product);

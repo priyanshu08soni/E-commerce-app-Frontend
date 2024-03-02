@@ -7,12 +7,13 @@ const Header = () => {
   const dispatch=useDispatch();
   const [cartTotalPrice,setCartTotalPrice]=useState(0);
   const cartState=useSelector(state=>state?.auth?.cartProducts);
+  console.log(cartState);
   useEffect(()=>{
     dispatch(getUserCart());
   },[])
   useEffect(() => {
     let sum = 0;
-    for (let i = 0; i < cartState.length; i++) {
+    for (let i = 0; i < cartState?.length; i++) {
       sum = sum + Number(cartState[i].quantity * cartState[i].price);
     }
     setCartTotalPrice(sum);

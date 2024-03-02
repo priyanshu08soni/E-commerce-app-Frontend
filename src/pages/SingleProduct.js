@@ -31,7 +31,7 @@ const SingleProduct = () => {
   }, []);
   const productState = useSelector((state) => state.product.SingleProduct);
   useEffect(() => {
-    for (let index = 0; index < cartState.length; index++) {
+    for (let index = 0; index < cartState?.length; index++) {
       if (prodId === cartState[index]?.productId?._id) {
         setAlreadyAdded(true);
       }
