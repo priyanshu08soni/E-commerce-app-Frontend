@@ -5,7 +5,10 @@ import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
 import {useFormik} from "formik";
 import * as yup from "yup";
-
+import axios from "axios";
+import {config} from "../utils/axiosConfig";
+import { createOrder } from "../features/user/userSlice";
+import { getProducts } from "../features/products/productSlice";
 const orderSchema=yup.object({
   firstName:yup.string().required("First Name is Required"),
   lastName:yup.string().required("Last Name is Required"),
@@ -18,14 +21,27 @@ const orderSchema=yup.object({
 })
 
 const Checkout = () => {
+  const getTokenFromLocalStorage=localStorage.getItem("customer")
+  ? JSON.parse(localStorage.getItem("customer")):null;
+  const config2={
+    headers:{
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+    },
+    Accept:"application/json"
+  };
   const dispatch = useDispatch();
   const [totalPrice, setTotalPrice] = useState(0);
   const [shippingInfo, setShippingInfo] = useState(null);
-
+  const [paymentInfo,setPaymentInfo]=useState({razorpayOrderId:"",razorpayPaymentId:""});
+  const [cartProductState,setCartProductState]=useState([]);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
+  console.log(paymentInfo);
+  useEffect(()=>{
+    dispatch(getProducts());
+  },[])
   useEffect(() => {
     let sum = 0;
-    for (let i = 0; i < cartState.length; i++) {
+    for (let i = 0; i < cartState?.length; i++) {
       sum = sum + Number(cartState[i].quantity * cartState[i].price);
     }
     setTotalPrice(sum);
@@ -44,9 +60,96 @@ const Checkout = () => {
     validationSchema:orderSchema,
     onSubmit:(values)=>{
       setShippingInfo(values);
-      
+      setTimeout(() => {
+        checkOutHandler();
+      }, 300);
     }
-  })
+  });
+  const  loadScript=(src)=>{
+    return new Promise((resolve)=>{
+      const script=document.createElement("script")
+      script.src=src;
+      script.onload=()=>{
+        resolve(true);
+      }
+      script.onerror=()=>{
+        resolve(false);
+      }
+      document.body.appendChild(script)
+    })
+  }
+  useEffect(()=>{
+    let items=[];
+    for (let index = 0; index < cartState?.length; index++) {
+      items.push(
+        {
+          product:cartState[index].productId._id,
+          quantity:cartState[index].quantity,
+          color:cartState[index].color._id,
+          price:cartState[index].price
+        }
+      )
+    }
+    setCartProductState(items);
+  },[]);
+  const checkOutHandler=async()=>{
+    const res=await loadScript("https://checkout.razorpay.com/v1/checkout.js")
+    if(!res){
+      alert("Razorpay SDK failed to Load");
+      return;
+    }
+    const result=await axios.post("http://localhost:5000/api/user/order/checkout",{amount:totalPrice+50},config)
+    if(!result){
+      alert("Somthing Went Wrong");
+      return;
+    }
+    const {amount,id:order_id,currency} =result.data.order
+    const options = {
+      key: process.env.key, // Enter the Key ID generated from the Dashboard
+      amount: amount,
+      currency: currency,
+      name: "Developers",
+      description: "Test Transaction",
+      order_id: order_id,
+      handler: async function (response) {
+          const data = {
+              orderCreationId: order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+          };
+
+          const result = await axios.post("http://localhost:5000/api/user/order/paymentVerification", data,config);
+          
+          setPaymentInfo({
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+          });
+          dispatch(createOrder(
+            {
+              totalPrice:totalPrice,
+              totalPriceAfterDiscount:totalPrice,
+              orderItems:cartProductState,
+              paymentInfo,
+              shippingInfo
+            }
+          ))
+      },
+      prefill: {
+          name: "Developers",
+          email: "Developers@example.com",
+          contact: "9090909090",
+      },
+      notes: {
+          address: "Developers Corporate Office",
+      },
+      theme: {
+          color: "#61dafb",
+      },
+  };
+
+  const paymentObject = new window.Razorpay(options);
+  paymentObject.open();
+  }
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">

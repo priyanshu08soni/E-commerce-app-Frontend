@@ -11,9 +11,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../features/products/productSlice";
 import { getUserCart } from "../features/user/userSlice";
 const Home = () => {
+  const getTokenFromLocalStorage=localStorage.getItem("customer")
+  ? JSON.parse(localStorage.getItem("customer")):null;
+  const config2={
+    headers:{
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+    },
+    Accept:"application/json"
+  };
   const dispatch=useDispatch();
   useEffect(()=>{
-    dispatch(getUserCart());
+    dispatch(getUserCart(config2));
     dispatch(getProducts());
   },[])
   const productState=useSelector((state)=>state.product.product);

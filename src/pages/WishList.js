@@ -7,6 +7,7 @@ import { addToWish, getUserWishlist } from "../features/user/userSlice";
 
 
 const WishList = () => {
+  const wlState= useSelector((state) => state?.auth?.wishlist?.wishlist);
   const dispatch = useDispatch();
   useEffect(() => {
     getWishlistFromDb();
@@ -20,7 +21,6 @@ const WishList = () => {
       dispatch(getUserWishlist());
     }, 100);
   }
-  const wlState= useSelector((state) => state?.auth?.wishlist?.wishlist);
  
   return (
     <>
@@ -40,8 +40,8 @@ const WishList = () => {
                 />
                 <div className="wishlist-card-image bg-white" >
                   <img
-                    src={item?.images.url
-                      ? item?.images.url
+                    src={item?.images?.url
+                      ? item?.images?.url
                       :"images/watch.jpg"}
                     className="img-fluid d-block mx-auto"
                     alt="watch"

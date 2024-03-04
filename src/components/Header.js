@@ -7,7 +7,7 @@ const Header = () => {
   const dispatch=useDispatch();
   const [cartTotalPrice,setCartTotalPrice]=useState(0);
   const cartState=useSelector(state=>state?.auth?.cartProducts);
-  console.log(cartState);
+  const authState=useSelector(state=>state?.auth);
   useEffect(()=>{
     dispatch(getUserCart());
   },[])
@@ -82,12 +82,18 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link to="/login" className="d-flex align-items-center gap-10 text-white">
+                  <Link to={authState.user===null?"/login":""} className="d-flex align-items-center gap-10 text-white">
                     <img src="/images/user.svg" alt="user" />
-                    <p className="mb-0">
-                      Log in <br />
-                      My Account
-                    </p>
+                    {
+                      authState.user===null ? 
+                      <p className="mb-0">
+                        Log in <br />
+                        My Account
+                      </p>: 
+                      <p className="mb-0">
+                        {authState?.user?.firstname+authState?.user?.lastname}
+                      </p>
+                    }
                   </Link>
                 </div>
                 <div>

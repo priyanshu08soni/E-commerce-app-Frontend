@@ -21,6 +21,7 @@ import TermAndConditions from './pages/TermAndConditions';
 import SingleProduct from './pages/SingleProduct';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import { PrivateRoute } from './route/PrivateRoute';
 
 function App() {
   return (
@@ -34,8 +35,8 @@ function App() {
           <Route path='about' element={<About/>} />
           <Route path='blogs' element={<Blog/>} />
           <Route path='blog/:id' element={<SingleBlog/>} />
-          <Route path='cart' element={<Cart/>} />
-          <Route path='checkout' element={<Checkout/>} />
+          <Route path='cart' element={<PrivateRoute><Cart/></PrivateRoute>} />
+          <Route path='checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
           <Route path='contact' element={<Contact/>} />
           <Route path='product' element={<OurStore/>} />
           <Route path='product/:id' element={<SingleProduct/>} />

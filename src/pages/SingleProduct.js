@@ -13,8 +13,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAProduct } from "../features/products/productSlice";
 import { addToCart, getUserCart } from "../features/user/userSlice";
 import { toast } from "react-toastify";
+import { config } from "../utils/axiosConfig";
 
 const SingleProduct = () => {
+  const getTokenFromLocalStorage=localStorage.getItem("customer")
+  ? JSON.parse(localStorage.getItem("customer")):null;
+  const config2={
+    headers:{
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+    },
+    Accept:"application/json"
+  };
+
   const [color, setColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const location = useLocation();
@@ -22,14 +32,14 @@ const SingleProduct = () => {
   const prodId = location.pathname.split("/")[2];
   const dispatch = useDispatch();
   const [orderdProduct, setorderdProduct] = useState(true);
-  const cartState = useSelector((state) => state.auth.cartProducts);
+  const cartState = useSelector((state) => state?.auth?.cartProducts);
 
   const [alreadyAdded, setAlreadyAdded] = useState(false);
   useEffect(() => {
     dispatch(getAProduct(prodId));
-    dispatch(getUserCart());
+    dispatch(getUserCart(config2));
   }, []);
-  const productState = useSelector((state) => state.product.SingleProduct);
+  const productState = useSelector((state) => state?.product?.SingleProduct);
   useEffect(() => {
     for (let index = 0; index < cartState?.length; index++) {
       if (prodId === cartState[index]?.productId?._id) {
@@ -42,13 +52,14 @@ const SingleProduct = () => {
       toast.error("Please Choose Color");
       return false;
     } else {
-      dispatch(
-        addToCart({
-          productId: productState?._id,
+      let cartData={
+        productId: productState?._id,
           quantity,
           color,
           price: productState?.price,
-        })
+      }
+      dispatch(
+        addToCart({cartData:cartData,config2:config2})
       );
     }
   };
@@ -85,7 +96,7 @@ const SingleProduct = () => {
               {productState &&
                 productState?.images.map((item, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <img className="img-fluid" src={item?.url} alt="" />
                     </div>
                   );
@@ -131,7 +142,7 @@ const SingleProduct = () => {
                 <div className="d-flex gap-10 align-items-center my-4">
                   <h3 className="product-heading">Tags:</h3>
                   <p className="product-data d-flex">
-                    <p className="mb-0 px-2">{productState?.tags}</p>
+                    <div className="mb-0 px-2">{productState?.tags}</div>
                   </p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-4">
@@ -193,9 +204,6 @@ const SingleProduct = () => {
                         >
                           ADD TO CART
                         </button>
-                        <Link to="/signup" className="button signup">
-                          BUY NOW
-                        </Link>
                       </div>
                     </div>
                   </>

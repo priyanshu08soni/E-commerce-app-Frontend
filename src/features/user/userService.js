@@ -1,6 +1,6 @@
 import axios from "axios";
-import { base_url, config } from "../../utils/axiosConfig";
-
+import { config } from "../../utils/axiosConfig";
+import { base_url } from "../../utils/base_url";
 const register=async(userData)=>{
     const response=await axios.post(`${base_url}user/register`,userData);
     if(response.data){
@@ -11,8 +11,9 @@ const register=async(userData)=>{
 const login=async(userData)=>{
     const response=await axios.post(`${base_url}user/login`,userData);
     if(response.data){
-        return response.data;
+        localStorage.setItem('customer',JSON.stringify(response.data));
     }
+    return response.data;
 }
 const getUserWishlist=async()=>{
     const response=await axios.get(`${base_url}user/wishlist`,config);
@@ -21,31 +22,36 @@ const getUserWishlist=async()=>{
     }
 }
 const addToCart=async(cartData)=>{
-    const response=await axios.post(`${base_url}user/cart`,cartData,config);
+    const response=await axios.post(`${base_url}user/cart`,cartData.cartData,cartData.config2);
     if(response.data){
         return response.data;
     }
 }
-const getUserCart=async()=>{
-    const response=await axios.get(`${base_url}user/cart`,config);
+const getUserCart=async(data)=>{
+    const response=await axios.get(`${base_url}user/cart`,data);
     if(response.data){
         return response.data;
     }
 }
-const removeProductFromCart=async(cartItemId)=>{
-    const response=await axios.delete(`${base_url}user/delete-product-cart/${cartItemId}`,config);
+const removeProductFromCart=async(data)=>{
+    const response=await axios.delete(`${base_url}user/delete-product-cart/${data.id}`,data.config2);
     if(response.data){
         return response.data;
     }
 }
 const updateProductQuantityFromCart=async(cartDetails)=>{
-    const response=await axios.delete(`${base_url}user/update-product-cart/${cartDetails.cartItemId}/${cartDetails.quantity}`,config);
+    const response=await axios.delete(`${base_url}user/update-product-cart/${cartDetails.cartItemId}/${cartDetails.quantity}`,cartDetails.config2);
     if(response.data){
         return response.data;
     }
 }
-const addToWishlist =async(prodId)=>{
-    const response=await axios.put(`${base_url}product/wishlist`,{prodId},config);
+const addToWishlist =async(data)=>{
+    const response=await axios.put(`${base_url}product/wishlist`,{prodId:data.prodId},data.config2);
+    return response.data;
+}
+
+const createOrder=async(orderDetail)=>{
+    const response=await axios.post(`${base_url}user/cart/create-order`,orderDetail,config);
     return response.data;
 }
 const authService={
@@ -56,7 +62,8 @@ const authService={
     getUserCart,
     removeProductFromCart,
     updateProductQuantityFromCart,
-    addToWishlist
+    addToWishlist,
+    createOrder,
 }
 
 export default authService;

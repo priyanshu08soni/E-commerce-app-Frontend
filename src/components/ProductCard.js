@@ -6,12 +6,20 @@ import { addToWish } from "../features/user/userSlice";
 
 
 const ProductCard = (props) => {
+  const getTokenFromLocalStorage=localStorage.getItem("customer")
+  ? JSON.parse(localStorage.getItem("customer")):null;
+  const config2={
+    headers:{
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+    },
+    Accept:"application/json"
+  };
   const { grid, data, category } = props;
   let location = useLocation();
   const dispatch = useDispatch();
   const navigate=useNavigate();
   const addToWishlist = (prodId) => {
-    dispatch(addToWish(prodId));
+    dispatch(addToWish({prodId:prodId,config2:config2}));
   };
   return (
     <>

@@ -12,12 +12,21 @@ import {
 } from "../features/user/userSlice";
 
 const Cart = () => {
+  const getTokenFromLocalStorage=localStorage.getItem("customer")
+  ? JSON.parse(localStorage.getItem("customer")):null;
+  const config2={
+    headers:{
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+    },
+    Accept:"application/json"
+  };
+
   const [productUpdateDetail, setProductUpdateDetail] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const userCartState = useSelector((state) => state?.auth?.cartProducts);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getUserCart());
+    dispatch(getUserCart(config2));
   }, []);
   useEffect(() => {
     if (productUpdateDetail !== null) {
@@ -25,10 +34,11 @@ const Cart = () => {
         updateProductQuantityFromCart({
           cartItemId: productUpdateDetail?.cartItemId,
           quantity: productUpdateDetail?.quantity,
+          config2:config2
         })
       );
       setTimeout(() => {
-        dispatch(getUserCart());
+        dispatch(getUserCart(config2));
       }, 200);
     }
   }, [productUpdateDetail]);
@@ -40,9 +50,9 @@ const Cart = () => {
     setTotalPrice(sum);
   }, [userCartState]);
   const deleteProduct = (id) => {
-    dispatch(deleteCartProduct(id));
+    dispatch(deleteCartProduct({id:id,config2:config2}));
     setTimeout(() => {
-      dispatch(getUserCart());
+      dispatch(getUserCart(config2));
     }, 200);
   };
   return (

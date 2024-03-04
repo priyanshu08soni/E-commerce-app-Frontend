@@ -30,16 +30,16 @@ export const addToCart=createAsyncThunk("user/add-to-cart",async(cartData,thunkA
         return thunkAPI.rejectWithValue(error);
     }
 })
-export const getUserCart=createAsyncThunk("user/get-cart",async(thunkAPI)=>{
+export const getUserCart=createAsyncThunk("user/get-cart",async(data,thunkAPI)=>{
     try {
-        return await authService.getUserCart();        
+        return await authService.getUserCart(data);        
     } catch (error) {
         return thunkAPI.rejectWithValue(error);
     }
 })
-export const deleteCartProduct=createAsyncThunk("user/cart/delete/product",async(id,thunkAPI)=>{
+export const deleteCartProduct=createAsyncThunk("user/cart/delete/product",async(data,thunkAPI)=>{
     try {
-        return await authService.removeProductFromCart(id);        
+        return await authService.removeProductFromCart(data);        
     } catch (error) {
         return thunkAPI.rejectWithValue(error);
     }
@@ -51,9 +51,16 @@ export const updateProductQuantityFromCart=createAsyncThunk("user/cart/update/pr
         return thunkAPI.rejectWithValue(error);
     }
 })
-export const addToWish=createAsyncThunk("wishlist/add-to-wishlist",async(prodId,thunkAPI)=>{
+export const addToWish=createAsyncThunk("wishlist/add-to-wishlist",async(data,thunkAPI)=>{
     try {
-        return await authService.addToWishlist(prodId);        
+        return await authService.addToWishlist(data);        
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+    }
+})
+export const createOrder=createAsyncThunk("user/cart/create-order",async(orderDetail,thunkAPI)=>{
+    try {
+        return await authService.createOrder(orderDetail);        
     } catch (error) {
         return thunkAPI.rejectWithValue(error);
     }
@@ -91,7 +98,7 @@ export const authSlice=createSlice({
             state.isSuccess=false;
             state.message=action.error;
             if(state.isError===true){
-                toast.error(action.error);
+                toast.error(action.payload.response.data.message);
             }
         })
         .addCase(loginUser.pending,(state)=>{
@@ -103,7 +110,6 @@ export const authSlice=createSlice({
             state.isSuccess=true;  
             state.user=action.payload;
             if(state.isSuccess===true){
-                localStorage.setItem("token",action.payload.token)
                 toast.info("Loggedin Successfully")
             }
         })
@@ -113,7 +119,7 @@ export const authSlice=createSlice({
             state.isSuccess=false;
             state.message=action.error;
             if(state.isError===true){
-                toast.error(action.error);
+                toast.error(action.payload.response.data.message);
             }
         })
         .addCase(getUserWishlist.pending,(state)=>{
@@ -219,6 +225,27 @@ export const authSlice=createSlice({
             }
         })
         .addCase(addToWish.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isError=true;
+            state.isSuccess=false;
+            state.message=action.error;
+            if(state.isError){
+                toast.error("Something went Wrong")
+            }
+        })
+        .addCase(createOrder.pending,(state)=>{
+            state.isLoading=true
+        })
+        .addCase(createOrder.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;  
+            state.orderedProduct=action.payload;
+            if(state.isSuccess){
+                toast.success("Ordered Successfully")
+            }
+        })
+        .addCase(createOrder.rejected,(state,action)=>{
             state.isLoading=false;
             state.isError=true;
             state.isSuccess=false;
