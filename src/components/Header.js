@@ -5,11 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserCart } from "../features/user/userSlice";
 const Header = () => {
   const dispatch=useDispatch();
+  const getTokenFromLocalStorage=localStorage.getItem("customer")
+  ? JSON.parse(localStorage.getItem("customer")):null;
+  const config2={
+    headers:{
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+    },
+    Accept:"application/json"
+  };
   const [cartTotalPrice,setCartTotalPrice]=useState(0);
   const cartState=useSelector(state=>state?.auth?.cartProducts);
   const authState=useSelector(state=>state?.auth);
   useEffect(()=>{
-    dispatch(getUserCart());
+    dispatch(getUserCart(config2));
   },[])
   useEffect(() => {
     let sum = 0;

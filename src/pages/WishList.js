@@ -5,21 +5,24 @@ import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWish, getUserWishlist } from "../features/user/userSlice";
 
-
 const WishList = () => {
+  const getTokenFromLocalStorage=localStorage.getItem("customer")
+  ? JSON.parse(localStorage.getItem("customer")):null;
+  const config2={
+    headers:{
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+    },
+    Accept:"application/json"
+  };
+
   const wlState= useSelector((state) => state?.auth?.wishlist?.wishlist);
   const dispatch = useDispatch();
   useEffect(() => {
-    getWishlistFromDb();
+    dispatch(getUserWishlist(config2));
   },[]);
-  const getWishlistFromDb = () => {
-    dispatch(getUserWishlist());
-  };
-  const removeFromWishlist=(id)=>{
-    dispatch(addToWish(id));
-    setTimeout(() => {
-      dispatch(getUserWishlist());
-    }, 100);
+  const removeFromWishlist=(prodId)=>{
+    dispatch(addToWish({prodId:prodId,config2:config2}));
+    dispatch(getUserWishlist(config2));
   }
  
   return (
@@ -31,26 +34,21 @@ const WishList = () => {
           { wlState &&  wlState?.map((item, index) => {
             return(
             <div className="col-3" key={index}>
-              <div className="wishlist-card position-relative">
-                <img
-                  onClick={removeFromWishlist(item?._id)}
-                  src="images/cross.svg"
-                  className="cross position-absolute img-fluid"
-                  alt="cross"
-                />
-                <div className="wishlist-card-image bg-white" >
+              <div className="wishlist-card position-relative rounded-5" >
+                <div className="wishlist-card-image bg-white">
                   <img
-                    src={item?.images?.url
-                      ? item?.images?.url
+                    src={item?.images[0]?.url
+                      ? item?.images[0]?.url
                       :"images/watch.jpg"}
                     className="img-fluid d-block mx-auto"
                     alt="watch"
                     width={160}
                   />
                 </div>
-                <div className="py-3 px-3">
+                <div className="py-3 px-3 bg-white">
+                <hr />
                   <h5 className="title">
-                    {item.title}
+                    {item.title.substr(0,90)+"..."}
                   </h5>
                   <h6 className="price">$ {item.price}</h6>
                 </div>

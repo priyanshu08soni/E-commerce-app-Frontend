@@ -98,7 +98,7 @@ const Checkout = () => {
       alert("Razorpay SDK failed to Load");
       return;
     }
-    const result=await axios.post("http://localhost:5000/api/user/order/checkout",{amount:totalPrice+50},config)
+    const result=await axios.post("http://localhost:5000/api/user/order/checkout",{amount:totalPrice+50},config2)
     if(!result){
       alert("Somthing Went Wrong");
       return;
@@ -118,7 +118,7 @@ const Checkout = () => {
               razorpayOrderId: response.razorpay_order_id,
           };
 
-          const result = await axios.post("http://localhost:5000/api/user/order/paymentVerification", data,config);
+          const result = await axios.post("http://localhost:5000/api/user/order/paymentVerification", data,config2);
           
           setPaymentInfo({
             razorpayPaymentId: response.razorpay_payment_id,
@@ -129,8 +129,9 @@ const Checkout = () => {
               totalPrice:totalPrice,
               totalPriceAfterDiscount:totalPrice,
               orderItems:cartProductState,
-              paymentInfo,
-              shippingInfo
+              paymentInfo:paymentInfo,
+              shippingInfo:shippingInfo,
+              config2:config2
             }
           ))
       },

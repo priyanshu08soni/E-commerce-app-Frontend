@@ -15,8 +15,8 @@ const login=async(userData)=>{
     }
     return response.data;
 }
-const getUserWishlist=async()=>{
-    const response=await axios.get(`${base_url}user/wishlist`,config);
+const getUserWishlist=async(config2)=>{
+    const response=await axios.get(`${base_url}user/wishlist`,config2);
     if(response.data){
         return response.data;
     }
@@ -51,7 +51,13 @@ const addToWishlist =async(data)=>{
 }
 
 const createOrder=async(orderDetail)=>{
-    const response=await axios.post(`${base_url}user/cart/create-order`,orderDetail,config);
+    const response=await axios.post(`${base_url}user/cart/create-order`,{
+        totalPrice:orderDetail.totalPrice,
+        totalPriceAfterDiscount:orderDetail.totalPriceAfterDiscount,
+        orderItems:orderDetail.orderItems,
+        paymentInfo:orderDetail.paymentInfo,
+        shippingInfo:orderDetail.shippingInfo
+    },orderDetail.config2);
     return response.data;
 }
 const authService={
