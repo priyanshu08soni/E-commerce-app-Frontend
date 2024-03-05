@@ -33,6 +33,12 @@ const getUserCart=async(data)=>{
         return response.data;
     }
 }
+const getUserOrders=async(config2)=>{
+    const response=await axios.get(`${base_url}user/getmyorders`,config2);
+    if(response.data){
+        return response.data;
+    }
+}
 const removeProductFromCart=async(data)=>{
     const response=await axios.delete(`${base_url}user/delete-product-cart/${data.id}`,data.config2);
     if(response.data){
@@ -70,6 +76,7 @@ const authService={
     updateProductQuantityFromCart,
     addToWishlist,
     createOrder,
+    getUserOrders,
 }
 
 export default authService;

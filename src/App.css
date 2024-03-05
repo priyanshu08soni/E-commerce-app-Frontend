@@ -805,3 +805,19 @@ footer .input-group-text{
 }
 /* Shipping Page ends here */
 
+/* Order */
+.order-card-heading{
+  background-color: var(--color-febd69);
+}
+.order-card-content{
+  background-color: var(--color-232f3e);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.heading-item-1{
+  border-top-left-radius: 10px;
+}
+.heading-item-4{
+  border-top-right-radius: 10px;
+}
+

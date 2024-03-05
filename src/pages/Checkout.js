@@ -35,7 +35,6 @@ const Checkout = () => {
   const [paymentInfo,setPaymentInfo]=useState({razorpayOrderId:"",razorpayPaymentId:""});
   const [cartProductState,setCartProductState]=useState([]);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
-  console.log(paymentInfo);
   useEffect(()=>{
     dispatch(getProducts());
   },[])
