@@ -55,6 +55,12 @@ const addToWishlist =async(data)=>{
     const response=await axios.put(`${base_url}product/wishlist`,{prodId:data.prodId},data.config2);
     return response.data;
 }
+const updateUser =async(data)=>{
+    const response=await axios.put(`${base_url}user/edit-user`,data.userData,data.config2);
+    if(response.data){
+        return response.data;
+    }
+}
 
 const createOrder=async(orderDetail)=>{
     const response=await axios.post(`${base_url}user/cart/create-order`,{
@@ -77,6 +83,7 @@ const authService={
     addToWishlist,
     createOrder,
     getUserOrders,
+    updateUser,
 }
 
 export default authService;

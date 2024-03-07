@@ -821,3 +821,11 @@ footer .input-group-text{
   border-top-right-radius: 10px;
 }
 
+/* Logout */
+.logout{
+  border:0px;
+  background-color: var(--color-232f3e);
+  font-size: 14px;
+  font-family: "Rubik",sans-serif;
+}
+

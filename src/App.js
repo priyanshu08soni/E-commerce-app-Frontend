@@ -24,6 +24,7 @@ import Checkout from './pages/Checkout';
 import { PrivateRoute } from './route/PrivateRoute';
 import { OpenRoute } from './route/OpenRoute';
 import Orders from './pages/Orders';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path='blog/:id' element={<SingleBlog/>} />
           <Route path='cart' element={<PrivateRoute><Cart/></PrivateRoute>} />
           <Route path='my-orders' element={<PrivateRoute><Orders/></PrivateRoute>} />
+          <Route path='my-profile' element={<PrivateRoute><Profile/></PrivateRoute>} />
           <Route path='checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
           <Route path='contact' element={<Contact/>} />
           <Route path='product' element={<OurStore/>} />
@@ -58,6 +60,5 @@ function App() {
     </BrowserRouter>
     </>
   );
-}
-
+};
 export default App;
