@@ -49,7 +49,7 @@ function App() {
           <Route path='wishlist' element={<PrivateRoute><WishList/></PrivateRoute>} />
           <Route path='login' element={<OpenRoute><Login/></OpenRoute>} />
           <Route path='signup' element={<OpenRoute><SignUp/></OpenRoute>} />
-          <Route path='reset-password' element={<ResetPassword/>} />
+          <Route path='reset-password/:token' element={<ResetPassword/>} />
           <Route path='forgot-password' element={<ForgotPassword/>} />
           <Route path='term-conditions' element={<TermAndConditions/>} />
           <Route path='privacy-policy' element={<PrivacyPolicy/>} />

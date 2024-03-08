@@ -3,9 +3,9 @@ import { config } from "../../utils/axiosConfig";
 import { base_url } from "../../utils/base_url";
 const register=async(userData)=>{
     const response=await axios.post(`${base_url}user/register`,userData);
-    if(response.data){
-        localStorage.setItem("customer",JSON.stringify(response.data))
-        return response.data;
+    if(response?.data){
+        localStorage.setItem("customer",JSON.stringify(response?.data))
+        return response?.data;
     }
 }
 const login=async(userData)=>{
@@ -61,6 +61,18 @@ const updateUser =async(data)=>{
         return response.data;
     }
 }
+const forgotPassToken =async(tokenData)=>{
+    const response=await axios.post(`${base_url}user/forgot-password-token`,tokenData);
+    if(response){
+        return response.data;
+    }
+}
+const resetPass =async(data)=>{
+    const response=await axios.put(`${base_url}user/reset-password/${data.token}`,data.password);
+    if(response){
+        return response.data;
+    }
+}
 
 const createOrder=async(orderDetail)=>{
     const response=await axios.post(`${base_url}user/cart/create-order`,{
@@ -84,6 +96,8 @@ const authService={
     createOrder,
     getUserOrders,
     updateUser,
+    forgotPassToken,
+    resetPass
 }
 
 export default authService;
