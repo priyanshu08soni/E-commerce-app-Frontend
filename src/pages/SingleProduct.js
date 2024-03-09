@@ -10,25 +10,27 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { getAProduct } from "../features/products/productSlice";
+import { getAProduct, rateProduct } from "../features/products/productSlice";
 import { addToCart, getUserCart } from "../features/user/userSlice";
 import { toast } from "react-toastify";
 import { config } from "../utils/axiosConfig";
 
 const SingleProduct = () => {
-  const getTokenFromLocalStorage=localStorage.getItem("customer")
-  ? JSON.parse(localStorage.getItem("customer")):null;
-  const config2={
-    headers:{
-      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+  const getTokenFromLocalStorage = localStorage.getItem("customer")
+    ? JSON.parse(localStorage.getItem("customer"))
+    : null;
+  const config2 = {
+    headers: {
+      Authorization: `Bearer ${
+        getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""
+      }`,
     },
-    Accept:"application/json"
+    Accept: "application/json",
   };
-
   const [color, setColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const location = useLocation();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const prodId = location.pathname.split("/")[2];
   const dispatch = useDispatch();
   const [orderdProduct, setorderdProduct] = useState(true);
@@ -40,6 +42,7 @@ const SingleProduct = () => {
     dispatch(getUserCart(config2));
   }, []);
   const productState = useSelector((state) => state?.product?.SingleProduct);
+  const productsState = useSelector((state) => state?.product?.product);
   useEffect(() => {
     for (let index = 0; index < cartState?.length; index++) {
       if (prodId === cartState[index]?.productId?._id) {
@@ -52,15 +55,13 @@ const SingleProduct = () => {
       toast.error("Please Choose Color");
       return false;
     } else {
-      let cartData={
+      let cartData = {
         productId: productState?._id,
-          quantity,
-          color,
-          price: productState?.price,
-      }
-      dispatch(
-        addToCart({cartData:cartData,config2:config2})
-      );
+        quantity,
+        color,
+        price: productState?.price,
+      };
+      dispatch(addToCart({ cartData: cartData, config2: config2 }));
     }
   };
   const props = {
@@ -80,10 +81,31 @@ const SingleProduct = () => {
     document.execCommand("copy");
     textField.remove();
   };
+  const [star, setStar] = useState();
+  const [comment, setComment] = useState();
+  const addRatingToProduct = () => {
+    if (star === undefined) {
+      toast.error("please specify star rating");
+      return false;
+    }
+    if (comment === undefined) {
+      toast.error("Please Write Comment");
+    } else {
+      dispatch(
+        rateProduct({
+          prodId: prodId,
+          star: star,
+          comment: comment,
+          config2: config2,
+        })
+        );
+    }
+  };
+
   return (
     <>
       <Meta title="Product Name" />
-      <BreadCrumb title="Product Name" />
+      <BreadCrumb title={productState?.title} />
       <Container className="home-wrapper-2 main-product-wrapper py-5">
         <div className="row">
           <div className="col-6">
@@ -305,50 +327,60 @@ const SingleProduct = () => {
               </div>
               <div className="review-form py-4">
                 <h4 className="mb-2">Write A Review</h4>
-                <form action="" className="d-flex flex-column gap-15">
-                  <div>
-                    <ReactStars
-                      count={5}
-                      edit={true}
-                      size={24}
-                      value="3"
-                      activeColor="#ffd700"
-                    ></ReactStars>
-                  </div>
-                  <div>
-                    <textarea
-                      name=""
-                      placeholder="Comments"
-                      className="w-100 form-control"
-                      id=""
-                      cols="30"
-                      rows="4"
-                    ></textarea>
-                  </div>
-                  <div className="d-flex justify-content-end">
-                    <button className="button border-0">Submit Review</button>
-                  </div>
-                </form>
+
+                <div>
+                  <ReactStars
+                    count={5}
+                    edit={true}
+                    size={24}
+                    value={star}
+                    onChange={(e) => setStar(e)}
+                    activeColor="#ffd700"
+                  ></ReactStars>
+                </div>
+                <div>
+                  <textarea
+                    name=""
+                    placeholder="Comments"
+                    className="w-100 form-control"
+                    id=""
+                    cols="30"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    rows="4"
+                  ></textarea>
+                </div>
+                <div className="d-flex justify-content-end my-3">
+                  <button
+                    onClick={addRatingToProduct}
+                    type="button"
+                    className="button border-0"
+                  >
+                    Submit Review
+                  </button>
+                </div>
               </div>
               <div className="reviews mt-4">
-                <div className="review">
-                  <div className="d-flex gap-10 align-items-center">
-                    <h6 className="mb-0">Priyanshu</h6>
-                    <ReactStars
-                      count={5}
-                      edit={false}
-                      size={24}
-                      value="3"
-                      activeColor="#ffd700"
-                    ></ReactStars>
-                  </div>
-                  <p className="mt-3">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Aut id, at beatae obcaecati laboriosam corporis repellat vel
-                    molestias nisi eveniet expedita. Ipsum autem molestias sint
-                    fugiat voluptas, voluptatem odit sunt.
-                  </p>
-                </div>
+                {productState?.ratings &&
+                  productState?.ratings?.map((item, index) => {
+                    return (
+                      <div className="review" key={index}>
+                        <div className="d-flex gap-10 align-items-center">
+                          
+                          <ReactStars
+                            count={5}
+                            edit={false}
+                            size={24}
+                            value={item?.star}
+                            activeColor="#ffd700"
+                          ></ReactStars>
+                        </div>
+                        <p className="mt-3">
+                          {item?.comment}
+                        </p>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>
@@ -357,14 +389,11 @@ const SingleProduct = () => {
       <Container class1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Suggestions</h3>
+            <h3 className="section-heading">Our Popular Products</h3>
           </div>
         </div>
         <div className="row">
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          <ProductCard data={productsState} category="popular" />
         </div>
       </Container>
     </>

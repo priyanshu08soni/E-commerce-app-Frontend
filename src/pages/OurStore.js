@@ -10,10 +10,50 @@ import { getProducts } from "../features/products/productSlice";
 const OurStore = () => {
   const [grid, setGrid] = useState(4);
   const dispatch=useDispatch();
+  
+  const productState=useSelector((state)=>state?.product?.product);
+  const [brands,setBrands]=useState(null);
+  const [tags,setTags]=useState(null);
+  const [sort,setSort]=useState(null);
+  const [categories,setCategories]=useState(null);
+
+
+  const [brand,setBrand]=useState(null);
+  const [tag,setTag]=useState(null);
+  const [category,setCategory]=useState(null);
+  const [minPrice,setMinPrice]=useState(null);
+  const [maxPrice,setMaxPrice]=useState(null);
   useEffect(()=>{
-    dispatch(getProducts());
-  },[])
-  const productState=useSelector((state)=>state.product.product);
+    let data=[];
+    let categoryData=[];
+    let newTags=[];
+    for (let i = 0; i < productState.length; i++) {
+      const element = productState[i];
+      data.push(element?.brand);
+      categoryData.push(element?.category);
+      newTags.push(element?.tags);
+    }
+    setBrands(data);
+    setCategories(categoryData);
+    setTags(newTags);
+  },[]);
+  
+
+  useEffect(()=>{
+    dispatch(getProducts({
+      sort,
+      tag,
+      brand,
+      category,
+      minPrice,
+      maxPrice
+    }));
+  },[sort,
+    tag,
+    brand,
+    category,
+    minPrice,
+    maxPrice])
   return (
     <>
       <Meta title="Our Store" />
@@ -25,235 +65,82 @@ const OurStore = () => {
               <h3 className="filter-title">Show By Categories</h3>
               <div>
                 <ul className="ps-0">
-                  <li>Watch</li>
-                  <li>Tv</li>
-                  <li>Camera</li>
-                  <li>Laptop</li>
+                  {
+                    categories && [...new Set(categories)]?.map((item,index)=>{
+                      return(
+                        <li key={index} onClick={()=>setCategory(item)} >{item}</li>
+                      )
+                    })
+                  }
                 </ul>
               </div>
             </div>
             <div className="filter-card mb-3">
               <h3 className="filter-title">Filter By</h3>
-              <div>
-                <h5 className="sub-title">Availability</h5>
-                <div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id=""
-                      className="form-check-input"
-                    />
-                    <label htmlFor="" className="form-check-label">
-                      In Stock (1)
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id=""
-                      className="form-check-input"
-                    />
-                    <label htmlFor="" className="form-check-label">
-                      Out of Stock
-                    </label>
-                  </div>
-                </div>
+              <div className="mt-2">
                 <h5 className="sub-title">Price</h5>
                 <div className="d-flex align-items-center gap-10">
                   <div className="form-floating">
                     <input
-                      type=""
+                      type="number"
                       placeholder="From"
                       id="floatingInput"
                       className="form-control py-1"
+                      onChange={(e)=>{setMinPrice(e.target.value)}}
                     />
                     <label htmlFor="">From</label>
                   </div>
                   <div className="form-floating">
                     <input
-                      type=""
+                      type="number"
                       placeholder="To"
                       id="floatingInput1"
                       className="form-control py-1"
+                      onChange={(e)=>{setMaxPrice(e.target.value)}}
                     />
                     <label htmlFor="">TO</label>
                   </div>
                 </div>
-                <h5 className="sub-title">Colors</h5>
-                <div className="d-flex flex-wrap gap-10">
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                  <Colors />
-                </div>
-                <h5 className="sub-title">Size</h5>
+              </div>
+              <div className="mt-2">
+                <h3 className="sub-title">Product Tags</h3>
                 <div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id="color-1"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="color-1" className="form-check-label">
-                      S (2)
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id="color-2"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="color-2" className="form-check-label">
-                      M (2)
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id="color-3"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="color-3" className="form-check-label">
-                      L (2)
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id="color-4"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="color-4" className="form-check-label">
-                      XL (2)
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id="color-5"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="color-5" className="form-check-label">
-                      XXL (2)
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      value=""
-                      id="color-6"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="color-6" className="form-check-label">
-                      XXXL (2)
-                    </label>
+                  <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                  {
+                      tags && [...new Set(tags)]?.map((item,index)=>{
+                        return(
+                          <span 
+                            className="badge text-capitalize  bg-light text-secondary rounded-3 py-2 px-3" 
+                            key={index} 
+                            onClick={()=>setTag(item)} 
+                            style={{cursor:"pointer"}}
+                          >
+                            {item}
+                          </span>
+                        )
+                      })
+                    }
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="filter-card mb-3">
-              <h3 className="filter-title">Product Tags</h3>
-              <div>
-                <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Headphone
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Laptop
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Mobile
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Oppo
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Speaker
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Vivo
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Tablet
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="filter-card mb-3">
-              <h3 className="filter-title">Random Products</h3>
-              <div>
-                <div className="random-products d-flex">
-                  <div className="w-50">
-                    <img
-                      className="img-fluid"
-                      src="images/tab3.jpg"
-                      alt="tab"
-                    />
-                  </div>
-                  <div className="w-50 px-3  mb-3">
-                    <h5>
-                      Kids headphone bulk 10 pack multi colored for students
-                    </h5>
-                    <ReactStars
-                      count={5}
-                      edit={false}
-                      size={24}
-                      value={3}
-                      activeColor="#ffd700"
-                    ></ReactStars>
-                    <b>$ 300</b>
-                  </div>
-                </div>
-                <div className="random-products d-flex mt-3">
-                  <div className="w-50">
-                    <img
-                      className="img-fluid"
-                      src="images/watch.jpg"
-                      alt="tab"
-                    />
-                  </div>
-                  <div className="w-50 px-3">
-                    <h5>
-                      Kids headphone bulk 10 pack multi colored for students
-                    </h5>
-                    <ReactStars
-                      count={5}
-                      edit={false}
-                      size={24}
-                      value={3}
-                      activeColor="#ffd700"
-                    ></ReactStars>
-                    <b>$ 300</b>
+              <div className="mt-2">
+                <h3 className="sub-title">Product Brands</h3>
+                <div>
+                  <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                  {
+                      brands && [...new Set(brands)]?.map((item,index)=>{
+                        return(
+                          <span 
+                          style={{cursor:"pointer"}}
+                            className="badge text-capitalize  bg-light text-secondary rounded-3 py-2 px-3" 
+                            key={index} 
+                            onClick={()=>setBrand(item)} 
+                          >
+                            {item}
+                          </span>
+                        )
+                      })
+                    }
                   </div>
                 </div>
               </div>
@@ -271,17 +158,17 @@ const OurStore = () => {
                     id=""
                     className="form-control form-select"
                     style={{ fontSize: "14px" }}
+                    onChange={(e)=>{setSort(e?.target?.value)}}
                   >
-                    <option value="manual">Featured</option>
-                    <option value="best-selling">Best selling</option>
-                    <option value="title-ascending">Alphabetically, A-Z</option>
-                    <option value="title-descending">
+                    <option value="" defaultValue={""}>Filter Products</option>
+                    <option value="title">Alphabetically, A-Z</option>
+                    <option value="-title">
                       Alphabetically, Z-A
                     </option>
-                    <option value="price-ascending">Price, low to high</option>
-                    <option value="price-scending">Price, high to low</option>
-                    <option value="created-ascending">Date, old to new</option>
-                    <option value="created-descending">Date, new to old</option>
+                    <option value="price">Price, low to high</option>
+                    <option value="-price">Price, high to low</option>
+                    <option value="createdAt">Date, old to new</option>
+                    <option value="-createdAt">Date, new to old</option>
                   </select>
                 </div>
                 <div className="d-flex align-items-center gap-10">

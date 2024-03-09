@@ -50,7 +50,9 @@ const SpecialProduct = (props) => {
                 ></div>
               </div>
             </div>
-            <Link className="button py-2 px-4" to={`/product/${id}`} >View</Link>
+            <Link className="button py-2 px-4"
+             to={`/product/${id}`}
+              >View</Link>
           </div>
         </div>
       </div>

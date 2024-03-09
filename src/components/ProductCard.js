@@ -84,13 +84,9 @@ const ProductCard = (props) => {
                     <div className="action-bar position-absolute">
                       <div className="d-flex flex-column gap-15">
                         <button className="border-0 bg-transparent">
-                          <img src="/images/prodcompare.svg" alt="compare" />
-                        </button>
-                        <button className="border-0 bg-transparent">
-                          <img src="/images/view.svg" onClick={()=>navigate("/product/"+item?._id)} alt="view" />
-                        </button>
-                        <button className="border-0 bg-transparent">
-                          <img src="/images/add-cart.svg" alt="addcart" />
+                          <img src="/images/view.svg" 
+                          onClick={()=>navigate("/product/"+item?._id)}
+                           alt="view" />
                         </button>
                       </div>
                     </div>
@@ -155,13 +151,7 @@ const ProductCard = (props) => {
                   <div className="action-bar position-absolute">
                     <div className="d-flex flex-column gap-15">
                       <button className="border-0 bg-transparent">
-                        <img src="/images/prodcompare.svg" alt="compare" />
-                      </button>
-                      <button className="border-0 bg-transparent">
                         <img src="/images/view.svg" onClick={()=>navigate("/product/"+item?._id)} alt="view" />
-                      </button>
-                      <button className="border-0 bg-transparent">
-                        <img src="/images/add-cart.svg" alt="addcart" />
                       </button>
                     </div>
                   </div>
