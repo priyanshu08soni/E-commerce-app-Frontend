@@ -73,6 +73,12 @@ const resetPass =async(data)=>{
         return response.data;
     }
 }
+const emptyCart =async(config2)=>{
+    const response=await axios.delete(`${base_url}user/empty-cart`,config2);
+    if(response){
+        return response.data;
+    }
+}
 
 const createOrder=async(orderDetail)=>{
     const response=await axios.post(`${base_url}user/cart/create-order`,{
@@ -97,7 +103,8 @@ const authService={
     getUserOrders,
     updateUser,
     forgotPassToken,
-    resetPass
+    resetPass,
+    emptyCart
 }
 
 export default authService;

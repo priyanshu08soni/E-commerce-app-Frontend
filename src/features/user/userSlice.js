@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { toast } from "react-toastify";
 import authService from "./userService"
@@ -93,7 +93,14 @@ export const resetPass=createAsyncThunk("user/reset-password",async(data,thunkAP
         return thunkAPI.rejectWithValue(error);
     }
 })
-
+export const emptyCart=createAsyncThunk("user/empty-cart",async(data,thunkAPI)=>{
+    try {
+        return await authService.emptyCart(data);        
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+    }
+})
+export const resetState=createAction("Reset_all");
 const getCustomerFromLocalStorage =localStorage.getItem("customer")?JSON.parse(localStorage.getItem("customer")):null;
 const initialState={
     user:getCustomerFromLocalStorage,
@@ -159,6 +166,18 @@ export const authSlice=createSlice({
             state.isSuccess=true;  
             state.updatedUser=action.payload;
             if(state.isSuccess===true){
+                let currentUserData=JSON.parse(localStorage.getItem("customer"));
+                let newUserData={
+                    _id:currentUserData?._id,
+                    token:currentUserData?.token,
+                    firstname:action?.payload?.firstname,
+                    lastname:action?.payload?.lastname,
+                    email:action?.payload?.email,
+                    mobile:action?.payload?.mobile
+                }
+                console.log(newUserData);
+                localStorage.setItem("customer",JSON.stringify(newUserData));
+                state.user=newUserData;
                 toast.success("User Updated Successfully")
             }
         })
@@ -256,6 +275,21 @@ export const authSlice=createSlice({
             state.cartProducts=action.payload;
         })
         .addCase(getUserCart.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isError=true;
+            state.isSuccess=false;
+            state.message=action.error;
+        })
+        .addCase(emptyCart.pending,(state)=>{
+            state.isLoading=true
+        })
+        .addCase(emptyCart.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;  
+            state.deletedCart=action.payload;
+        })
+        .addCase(emptyCart.rejected,(state,action)=>{
             state.isLoading=false;
             state.isError=true;
             state.isSuccess=false;
@@ -360,6 +394,7 @@ export const authSlice=createSlice({
                 toast.error("Something went Wrong")
             }
         })
+        .addCase(resetState,()=>initialState);
     }
 })
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import {useFormik} from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import {config} from "../utils/axiosConfig";
-import { createOrder } from "../features/user/userSlice";
+import { createOrder, emptyCart, resetState } from "../features/user/userSlice";
 import { getProducts } from "../features/products/productSlice";
 const orderSchema=yup.object({
   firstName:yup.string().required("First Name is Required"),
@@ -29,12 +29,14 @@ const Checkout = () => {
     },
     Accept:"application/json"
   };
+  const navigate=useNavigate();
   const dispatch = useDispatch();
   const [totalPrice, setTotalPrice] = useState(0);
   const [shippingInfo, setShippingInfo] = useState(null);
   const [paymentInfo,setPaymentInfo]=useState({razorpayOrderId:"",razorpayPaymentId:""});
   const [cartProductState,setCartProductState]=useState([]);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
+  const authState=useSelector((state)=>state.auth);
   useEffect(()=>{
     dispatch(getProducts());
   },[])
@@ -57,8 +59,8 @@ const Checkout = () => {
       other:"",
     },
     validationSchema:orderSchema,
-    onSubmit:(values)=>{
-      setShippingInfo(values);
+    onSubmit:async(values)=>{
+      await setShippingInfo(values);
       setTimeout(() => {
         checkOutHandler();
       }, 300);
@@ -119,7 +121,7 @@ const Checkout = () => {
 
           const result = await axios.post("http://localhost:5000/api/user/order/paymentVerification", data,config2);
           
-          setPaymentInfo({
+          await setPaymentInfo({
             razorpayPaymentId: response.razorpay_payment_id,
             razorpayOrderId: response.razorpay_order_id,
           });
@@ -133,6 +135,8 @@ const Checkout = () => {
               config2:config2
             }
           ))
+          dispatch(emptyCart(config2));
+          dispatch(resetState());
       },
       prefill: {
           name: "Developers",
@@ -150,6 +154,11 @@ const Checkout = () => {
   const paymentObject = new window.Razorpay(options);
   paymentObject.open();
   }
+  useEffect(()=>{
+    if(authState?.orderedProduct!==null && authState?.orderedProduct?.success===true){
+      navigate("/my-orders");
+    }
+  },[authState])
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
