@@ -15,7 +15,9 @@ const Home = () => {
   ? JSON.parse(localStorage.getItem("customer")):null;
   const config2={
     headers:{
-      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`,
+      "Access-Control-Allow-Origin": "https://e-commerce-app-frontend-pink.vercel.app",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
     },
     Accept:"application/json"
   };
