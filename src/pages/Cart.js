@@ -32,7 +32,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserCart(config2));
-  }, []);
+  }, [config2]);
   useEffect(() => {
     if (productUpdateDetail !== null) {
       dispatch(
@@ -46,7 +46,7 @@ const Cart = () => {
         dispatch(getUserCart(config2));
       }, 200);
     }
-  }, [productUpdateDetail]);
+  }, [productUpdateDetail,config2]);
   useEffect(() => {
     let sum = 0;
     for (let i = 0; i < userCartState?.length; i++) {

@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import BreadCrumb from "../components/breadCrumb";
 import Meta from "../components/Meta";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "../components/Container";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import CustomInput from "../components/CustomInput";
 import { loginUser } from "../features/user/userSlice";
 let loginSchema=yup.object({

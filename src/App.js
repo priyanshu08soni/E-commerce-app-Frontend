@@ -21,8 +21,6 @@ import TermAndConditions from './pages/TermAndConditions';
 import SingleProduct from './pages/SingleProduct';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
-import { PrivateRoute } from './route/PrivateRoute';
-import { OpenRoute } from './route/OpenRoute';
 import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 
@@ -38,15 +36,15 @@ function App() {
           <Route path='about' element={<About/>} />
           <Route path='blogs' element={<Blog/>} />
           <Route path='blog/:id' element={<SingleBlog/>} />
-          <Route path='cart' element={<PrivateRoute><Cart/></PrivateRoute>} />
-          <Route path='my-orders' element={<PrivateRoute><Orders/></PrivateRoute>} />
-          <Route path='my-profile' element={<PrivateRoute><Profile/></PrivateRoute>} />
-          <Route path='checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
+          <Route path='cart' element={<Cart/>} />
+          <Route path='my-orders' element={<Orders/>} />
+          <Route path='my-profile' element={<Profile/>} />
+          <Route path='checkout' element={<Checkout/>} />
           <Route path='contact' element={<Contact/>} />
           <Route path='product' element={<OurStore/>} />
           <Route path='product/:id' element={<SingleProduct/>} />
           <Route path='compare-product' element={<CompareProduct/>} />
-          <Route path='wishlist' element={<PrivateRoute><WishList/></PrivateRoute>} />
+          <Route path='wishlist' element={<WishList/>} />
           <Route path='login' element={<Login/>} />
           <Route path='signup' element={<SignUp/>} />
           <Route path='reset-password/:token' element={<ResetPassword/>} />

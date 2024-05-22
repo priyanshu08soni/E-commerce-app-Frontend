@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import axios from "axios";
-import {config} from "../utils/axiosConfig";
 import { createOrder, emptyCart, resetState } from "../features/user/userSlice";
 import { getProducts } from "../features/products/productSlice";
 const orderSchema=yup.object({
@@ -41,6 +40,7 @@ const Checkout = () => {
     navigate("/login");
   }
   useEffect(()=>{
+    // eslint-disable-next-line
     dispatch(getProducts());
   },[])
   useEffect(() => {
@@ -95,7 +95,7 @@ const Checkout = () => {
       )
     }
     setCartProductState(items);
-  },[]);
+  },[cartState]);
   const checkOutHandler=async()=>{
     const res=await loadScript("https://checkout.razorpay.com/v1/checkout.js")
     if(!res){
