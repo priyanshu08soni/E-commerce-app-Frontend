@@ -1,1 +1,1 @@
-export const base_url="https://e-commerce-app-backend-api.vercel.app/api/"
+export const base_url="https://e-commerce-backend-nine-alpha.vercel.app/api/"
