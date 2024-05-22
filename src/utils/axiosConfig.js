@@ -3,7 +3,6 @@ export const config={
     headers:{
         Authorization:`Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`,
         Accept:"application/json",
-        "Access-Control-Allow-Origin": "https://e-commerce-app-frontend-pink.vercel.app",
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        origin:"https://e-commerce-app-frontend-pink.vercel.app"
     }
 }
