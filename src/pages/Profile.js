@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../features/user/userSlice";
 import { FiEdit } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 const profileSchema = yup.object({
   firstname: yup.string().required("First Name is Required"),
   lastname: yup.string().required("Last Name is Required"),
@@ -15,6 +16,11 @@ const profileSchema = yup.object({
 });
 
 const Profile = () => {
+  const navigate=useNavigate();
+  const authState=useSelector(state=>state.auth);
+  if(authState.user!==null && authState.isError===false){
+    navigate("/login");
+  }
   const getTokenFromLocalStorage = localStorage.getItem("customer")
     ? JSON.parse(localStorage.getItem("customer"))
     : null;

@@ -37,6 +37,9 @@ const Checkout = () => {
   const [cartProductState,setCartProductState]=useState([]);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
   const authState=useSelector((state)=>state.auth);
+  if(authState.user!==null && authState.isError===false){
+    navigate("/login");
+  }
   useEffect(()=>{
     dispatch(getProducts());
   },[])

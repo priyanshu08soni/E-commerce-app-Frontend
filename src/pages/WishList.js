@@ -4,8 +4,14 @@ import Meta from "../components/Meta";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWish, getUserWishlist } from "../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const WishList = () => {
+  const navigate=useNavigate();
+  const authState=useSelector(state=>state.auth);
+  if(authState.user!==null && authState.isError===false){
+    navigate("/login");
+  }
   const getTokenFromLocalStorage=localStorage.getItem("customer")
   ? JSON.parse(localStorage.getItem("customer")):null;
   const config2={

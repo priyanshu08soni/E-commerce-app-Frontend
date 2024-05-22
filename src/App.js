@@ -47,8 +47,8 @@ function App() {
           <Route path='product/:id' element={<SingleProduct/>} />
           <Route path='compare-product' element={<CompareProduct/>} />
           <Route path='wishlist' element={<PrivateRoute><WishList/></PrivateRoute>} />
-          <Route path='login' element={<OpenRoute><Login/></OpenRoute>} />
-          <Route path='signup' element={<OpenRoute><SignUp/></OpenRoute>} />
+          <Route path='login' element={<Login/>} />
+          <Route path='signup' element={<SignUp/>} />
           <Route path='reset-password/:token' element={<ResetPassword/>} />
           <Route path='forgot-password' element={<ForgotPassword/>} />
           <Route path='term-conditions' element={<TermAndConditions/>} />

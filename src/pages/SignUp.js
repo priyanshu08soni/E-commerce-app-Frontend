@@ -32,13 +32,10 @@ const SignUp = () => {
     validationSchema:signUpSchema,
     onSubmit:(values)=>{
       dispatch(registerUser(values));
-    }
-  })
-  useEffect(()=>{
-    if(authState.createdUser!==null && authState.isError===false){
       navigate("/login");
     }
-  },[authState])
+  })
+
   return (
     <>
       <Meta title="Sign Up" />

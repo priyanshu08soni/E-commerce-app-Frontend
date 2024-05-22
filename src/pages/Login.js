@@ -17,7 +17,6 @@ let loginSchema=yup.object({
 const Login = () => {
   const dispatch=useDispatch();
   const navigate=useNavigate();
-  const authState=useSelector(state=>state.auth);
   const formik=useFormik({
     initialValues:{
       email:"",
@@ -26,13 +25,9 @@ const Login = () => {
     validationSchema:loginSchema,
     onSubmit:(values)=>{
       dispatch(loginUser(values));
+      navigate('/');
     }
   })
-  useEffect(()=>{
-    if(authState.user!==null && authState.isError===false){
-      navigate("/");
-    }
-  },[authState])
   return (
     <>
       <Meta title="Login" />

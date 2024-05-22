@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/breadCrumb";
 import Meta from "../components/Meta";
 import { AiFillDelete } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,6 +12,11 @@ import {
 } from "../features/user/userSlice";
 
 const Cart = () => {
+  const navigate=useNavigate();
+  const authState=useSelector(state=>state.auth);
+  if(authState.user!==null && authState.isError===false){
+    navigate("/login");
+  }
   const getTokenFromLocalStorage=localStorage.getItem("customer")
   ? JSON.parse(localStorage.getItem("customer")):null;
   const config2={
