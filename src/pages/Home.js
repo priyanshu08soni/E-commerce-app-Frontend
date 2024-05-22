@@ -15,8 +15,7 @@ const Home = () => {
   ? JSON.parse(localStorage.getItem("customer")):null;
   const config2={
     headers:{
-      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`,
-      origin:"https://e-commerce-app-frontend-pink.vercel.app"
+      Authorization: `Bearer ${getTokenFromLocalStorage!==null?getTokenFromLocalStorage.token:""}`
     },
     Accept:"application/json"
   };
