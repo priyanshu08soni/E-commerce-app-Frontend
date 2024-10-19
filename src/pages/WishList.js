@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const WishList = () => {
   const navigate=useNavigate();
   const authState=useSelector(state=>state.auth);
-  if(authState.user!==null && authState.isError===false){
+  if(authState.user===null && authState.isError===false){
     navigate("/login");
   }
   const getTokenFromLocalStorage=localStorage.getItem("customer")
@@ -42,14 +42,21 @@ const WishList = () => {
             <div className="col-3" key={index}>
               <div className="wishlist-card position-relative rounded-5" >
                 <div className="wishlist-card-image bg-white">
-                  <img
-                    src={item?.images[0]?.url
-                      ? item?.images[0]?.url
+                  {
+                    item && item.images.map((image,index1)=>{
+                      return (
+                        <img
+                        key={index1}
+                    src={image?.url
+                      ? image?.url
                       :"images/watch.jpg"}
                     className="img-fluid d-block mx-auto"
                     alt="watch"
                     width={160}
                   />
+                      )
+                    })
+                  }
                 </div>
                 <div className="py-3 px-3 bg-white">
                 <hr />
