@@ -14,7 +14,7 @@ import {
 const Cart = () => {
   const navigate=useNavigate();
   const authState=useSelector(state=>state.auth);
-  if(authState.user!==null && authState.isError===false){
+  if(authState.user===null && authState.isError===false){
     navigate("/login");
   }
   const getTokenFromLocalStorage=localStorage.getItem("customer")
